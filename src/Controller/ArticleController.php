@@ -19,10 +19,10 @@ class ArticleController
         try {       
             $articleDao = new ArticleDao();
             $countArticle = $articleDao->countRow();
-            if($countArticle>5){
+            if($countArticle>MAX_ARTICLE_DISPLAYED){
                 $showPagination=true;
             }
-            if($countArticle>($page+1)*5){
+            if($countArticle>($page+1)*MAX_ARTICLE_DISPLAYED-1){
                 $showNextLink=true;
             }
 

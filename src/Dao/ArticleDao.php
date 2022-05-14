@@ -31,8 +31,11 @@ class ArticleDao extends AbstractDao
      */
     public function getAll(int $page): array
     {
-        $offset = $page*5;
-        $sth = $this->dbh->prepare("SELECT * FROM `article` LIMIT 5 OFFSET $offset");
+        $offset = $page*MAX_ARTICLE_DISPLAYED;
+        $sth = $this->dbh->prepare(
+            "SELECT * FROM `article` 
+            LIMIT ".MAX_ARTICLE_DISPLAYED." OFFSET $offset"
+            );
         $sth->execute();
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -75,7 +78,6 @@ class ArticleDao extends AbstractDao
         if (empty($result)) {
             return null;
         }
-
         $user = null;
 
         if (isset($result['id_user'])) {
@@ -136,7 +138,10 @@ class ArticleDao extends AbstractDao
      */
     public function delete(int $id): void
     {
-        $sth = $this->dbh->prepare("DELETE FROM `article` WHERE id_article = :id_article");
+        $sth = $this->dbh->prepare(
+            "DELETE FROM `article` 
+            WHERE id_article = :id_article"
+            );
         $sth->execute([":id_article" => $id]);
     }
 }
