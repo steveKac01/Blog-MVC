@@ -31,10 +31,10 @@ class ArticleDao extends AbstractDao
      */
     public function getAll(int $page): array
     {
-        $offset = $page*MAX_ARTICLE_DISPLAYED;
+        $offset = $page*MAX_ARTICLES_DISPLAYED;
         $sth = $this->dbh->prepare(
             "SELECT * FROM `article` 
-            LIMIT ".MAX_ARTICLE_DISPLAYED." OFFSET $offset"
+            LIMIT ".MAX_ARTICLES_DISPLAYED." OFFSET $offset"
             );
         $sth->execute();
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);

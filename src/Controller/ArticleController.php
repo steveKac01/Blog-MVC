@@ -19,10 +19,10 @@ class ArticleController
         try {       
             $articleDao = new ArticleDao();
             $countArticle = $articleDao->countRow();
-            if($countArticle>MAX_ARTICLE_DISPLAYED){
+            if($countArticle>MAX_ARTICLES_DISPLAYED){
                 $showPagination=true;
             }
-            if($countArticle>($page+1)*MAX_ARTICLE_DISPLAYED-1){
+            if($countArticle>($page+1)*MAX_ARTICLES_DISPLAYED){
                 $showNextLink=true;
             }
 
@@ -33,9 +33,6 @@ class ArticleController
             die;
         }
     }
-
-
-
  
     /**
      * Action de créer un nouvel article
@@ -87,13 +84,23 @@ class ArticleController
      *
      * @param int $id Identifiant de l'article à afficher
      */
-    public function show(int $id)
+    public function show(int $id,int $page=0)
     {
+        $showNextLink=false;
+        $showPagination=false;
         try {
             $articleDao = new ArticleDao();
             $article = $articleDao->getById($id);
+
             $commentDao = new CommentDao();
-            $comments = $commentDao->getCommentsByArticle($id);
+            $countComments = $commentDao->countRow($id);
+            if($countComments>MAX_COMMENTS_DISPLAYED){
+                $showPagination=true;
+            }
+            if($countComments>($page+1)*MAX_COMMENTS_DISPLAYED){
+                $showNextLink=true;
+            }
+            $comments = $commentDao->getCommentsByArticle($id,$page);
 
         } catch (PDOException $e) {
             echo $e->getMessage();

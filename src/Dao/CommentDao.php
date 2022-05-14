@@ -8,14 +8,34 @@ use Core\AbstractDao;
 
 class CommentDao extends AbstractDao
 {
+       /**
+     * Récupères le nombre de lignes dans la table commentaire pour la pagination
+     *
+     * @return integer retourne le nombre de commentaires présent dans la base de données.
+     */
+    public function countRow(int $idArticle):int
+    {
+        $sth = $this->dbh->prepare("SELECT count(*) as count FROM `comment` where article_id=:id;");
+        $sth->execute([
+            ':id' => $idArticle
+        ]);
+        $result = $sth->fetch(\PDO::FETCH_ASSOC);
+
+        return (int)$result["count"];
+    }
+   
+   
     /**
      * Récupère tous les commentaires de l'article.
      *
      * @param [type] $idArticle L'identifiant de l'aticle.
      * @return array|null retourne un tableau de commentaires ou null si il y en a pas.
      */
-    public function getCommentsByArticle($idArticle): ?array
+    public function getCommentsByArticle(int $idArticle,int $page): ?array
     {
+
+        $offset = $page*MAX_COMMENTS_DISPLAYED;
+
         $sth = $this->dbh->prepare(
             "SELECT comment.user_id, comment.id_comment,
                     comment.content,
@@ -23,7 +43,8 @@ class CommentDao extends AbstractDao
                     u.pseudo as pseudo FROM `comment`
             LEFT JOIN `user` as u 
             ON comment.user_id = u.id_user
-            WHERE article_id=:id;"
+            WHERE article_id=:id
+            LIMIT ".MAX_COMMENTS_DISPLAYED." OFFSET $offset;"
         );
         $sth->execute([
             ":id" => $idArticle

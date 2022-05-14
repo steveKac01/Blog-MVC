@@ -31,6 +31,12 @@ class UserDao extends AbstractDao
             ->setCreatedAt($result['created_at']);
     }
 
+    /**
+     * Ajoutes un utilisateur à la base de données
+     *
+     * @param User $user Objet de l'utilisateur à ajouter à la bdd
+     * @return void
+     */
     public function new(User $user) : void
     {
         $sth = $this->dbh->prepare('INSERT INTO user (pseudo, pwd, email) VALUES (:pseudo, :pwd, :email)');

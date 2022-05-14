@@ -52,10 +52,9 @@ class CommentController
             }
         }
         //On affiche le formulaire
-        $btnName = "Add";
+        $buttonLabel = "Add";
         require_once implode(DIRECTORY_SEPARATOR, [VIEW, 'comment', 'new.html.php']);
     }
-
 
     /**
      * Action de supprimer un commentaire en fonction de son identifiant
@@ -136,7 +135,7 @@ class CommentController
             }
         }
         //On affiche le formulaire
-        $btnName = "Edit";
+        $buttonLabel = "Edit";
         require_once implode(DIRECTORY_SEPARATOR, [VIEW, 'comment', 'new.html.php']);
     }
 }
